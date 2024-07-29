@@ -10,7 +10,7 @@
 namespace Nexus {
 interface IRuntimeModule {
    public:
-    virtual ~IRuntimeModule() {}
+    virtual ~IRuntimeModule() = default;
 
     virtual int Initialize() = 0;
     virtual void Finalize() = 0;
