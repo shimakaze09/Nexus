@@ -202,6 +202,18 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam,
         }
             wasHandled = true;
             break;
+
+        case WM_SIZE:
+            if (pRenderTarget != nullptr) {
+                RECT rc;
+                GetClientRect(hWnd, &rc);
+
+                D2D1_SIZE_U size =
+                    D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
+                pRenderTarget->Resize(size);
+            }
+            wasHandled = true;
+            break;
         case WM_DESTROY:
             DiscardGraphicsResources();
             SafeRelease(&pFactory);
