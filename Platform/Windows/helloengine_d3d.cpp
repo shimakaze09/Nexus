@@ -127,8 +127,7 @@ void InitGraphics() {
 
     // Copy the vertices into the buffer
     D3D11_MAPPED_SUBRESOURCE ms;
-    g_pDeviceContext->Map(g_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL,
-                          &ms);
+    g_pDeviceContext->Map(g_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
     memcpy(ms.pData, OurVertices, sizeof(OurVertices));
     g_pDeviceContext->Unmap(g_pVertexBuffer, 0);
 }
