@@ -11,12 +11,13 @@
 namespace Nexus {
 class BaseApplication : implements IApplication {
    public:
-    BaseApplication(GfxConfiguration& cfg);
-    virtual int Initialize() override;
-    virtual void Finalize() override;
-    virtual void Tick() override;
+    explicit BaseApplication(GfxConfiguration& cfg);
+    int Initialize() override;
+    void Finalize() override;
+    // One cycle of the main loop
+    void Tick() override;
 
-    virtual bool IsQuit() override;
+    bool IsQuit() override;
 
    protected:
     // Flag if we need quit the main loop of the application

@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <cstdio>
+
 #include "BaseApplication.hpp"
 
 namespace Nexus {
@@ -14,7 +15,6 @@ int main() {
     }
 
     while (!Nexus::g_pApp->IsQuit()) {
-        printf("App ticking...\n");
         Nexus::g_pApp->Tick();
     }
 

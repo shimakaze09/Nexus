@@ -22,10 +22,10 @@ int Nexus::WindowsApplication::Initialize() {
 
     if (result != 0) exit(result);
 
-    // Get the instance of console program
+    // Get the HINSTANCE of the Console Program
     HINSTANCE hInstance = GetModuleHandle(nullptr);
 
-    // Create the handle of window
+    // The handle for the window
     HWND hWnd;
     // This struct holds information for the window class
     WNDCLASSEX wc;
@@ -33,7 +33,7 @@ int Nexus::WindowsApplication::Initialize() {
     // Clear out the window class for use
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
-    // Fill in the struct with the needed information
+    // Fill in the struct with the necessary information
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = WindowProc;
@@ -73,20 +73,24 @@ void Nexus::WindowsApplication::Tick() {
     MSG msg;
 
     if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        // Translate keystroke messages into the right format
         TranslateMessage(&msg);
+
+        // Send the message to the WindowProc function
         DispatchMessage(&msg);
     }
 }
 
+// This is the main message handler for the program
 LRESULT CALLBACK Nexus::WindowsApplication::WindowProc(HWND hWnd, UINT message,
                                                        WPARAM wParam,
                                                        LPARAM lParam) {
     // Sort through and find what code to run for the message given
     switch (message) {
-        case WM_PRINT: {
+        case WM_PAINT: {
         } break;
 
-            // This message is read when the window is closed
+        // This message is read when the window is closed
         case WM_DESTROY: {
             // Close the application entirely
             PostQuitMessage(0);

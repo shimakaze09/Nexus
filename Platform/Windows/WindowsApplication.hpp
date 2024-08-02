@@ -13,12 +13,12 @@
 namespace Nexus {
 class WindowsApplication : public BaseApplication {
    public:
-    WindowsApplication(GfxConfiguration& config) : BaseApplication(config) {}
+    explicit WindowsApplication(GfxConfiguration& config) : BaseApplication(config) {}
 
-    virtual int Initialize() override;
-    virtual void Finalize() override;
+    int Initialize() override;
+    void Finalize() override;
 
-    virtual void Tick() override;
+    void Tick() override;
 
     static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam,
                                        LPARAM lParam);
