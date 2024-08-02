@@ -1,0 +1,2 @@
+ADD_EXECUTABLE(NexusEngine WindowsApplication.cpp)
+TARGET_LINK_LIBRARIES(NexusEngine Common)

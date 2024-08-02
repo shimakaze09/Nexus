@@ -14,16 +14,13 @@
 using namespace Nexus;
 
 Nexus::Allocator::Allocator()
-    : m_szDataSize(0),
+    : m_pPageList(nullptr),
+      m_pFreeList(nullptr),
+      m_szDataSize(0),
       m_szPageSize(0),
       m_szAlignmentSize(0),
       m_szBlockSize(0),
-      m_nBlocksPerPage(0),
-      m_nPages(0),
-      m_nBlocks(0),
-      m_nFreeBlocks(0),
-      m_pPageList(nullptr),
-      m_pFreeList(nullptr) {}
+      m_nBlocksPerPage(0) {}
 
 Nexus::Allocator::Allocator(size_t dataSize, size_t pageSize, size_t alignment)
     : m_pPageList(nullptr), m_pFreeList(nullptr) {

@@ -4,8 +4,15 @@
 
 #include "BaseApplication.hpp"
 
+#include <iostream>
+
+bool Nexus::BaseApplication::m_bQuit = false;
+
+Nexus::BaseApplication::BaseApplication(GfxConfiguration& cfg)
+    : m_Config(cfg) {}
+
 int Nexus::BaseApplication::Initialize() {
-    m_bQuit = false;
+    std::cout << m_Config;
     return 0;
 }
 
