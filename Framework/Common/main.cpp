@@ -1,24 +1,44 @@
 #include <cstdio>
 
-#include "BaseApplication.hpp"
+#include "GraphicsManager.hpp"
+#include "IApplication.hpp"
+#include "MemoryManager.hpp"
+
+using namespace Nexus;
 
 namespace Nexus {
-extern IApplication *g_pApp;
+extern IApplication* g_pApp;
+extern MemoryManager* g_pMemoryManager;
+extern GraphicsManager* g_pGraphicsManager;
 }  // namespace Nexus
 
 int main() {
     int ret;
 
-    if ((ret = Nexus::g_pApp->Initialize()) != 0) {
+    if ((ret = g_pApp->Initialize()) != 0) {
         printf("App Initialize failed, will exit now.");
         return ret;
     }
 
-    while (!Nexus::g_pApp->IsQuit()) {
-        Nexus::g_pApp->Tick();
+    if ((ret = g_pMemoryManager->Initialize()) != 0) {
+        printf("Memory Manager Initialize failed, will exit now.");
+        return ret;
     }
 
-    Nexus::g_pApp->Finalize();
+    if ((ret = g_pGraphicsManager->Initialize()) != 0) {
+        printf("Graphics Manager Initialize failed, will exit now.");
+        return ret;
+    }
+
+    while (!g_pApp->IsQuit()) {
+        g_pApp->Tick();
+        g_pMemoryManager->Tick();
+        g_pGraphicsManager->Tick();
+    }
+
+    g_pGraphicsManager->Finalize();
+    g_pMemoryManager->Finalize();
+    g_pApp->Finalize();
 
     return 0;
 }

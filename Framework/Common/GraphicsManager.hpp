@@ -11,6 +11,11 @@ namespace Nexus {
 class GraphicsManager : implements IRuntimeModule {
    public:
     ~GraphicsManager() override = default;
+
+    int Initialize() override;
+    void Finalize() override;
+
+    void Tick() override;
 };
 }  // namespace Nexus
 

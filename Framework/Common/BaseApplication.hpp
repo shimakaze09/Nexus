@@ -19,8 +19,10 @@ class BaseApplication : implements IApplication {
 
     bool IsQuit() override;
 
+    inline GfxConfiguration& GetConfiguration() override { return m_Config; }
+
    protected:
-    // Flag if we need quit the main loop of the application
+    // Flag if we need to quit the main loop of the application
     static bool m_bQuit;
     GfxConfiguration m_Config;
 

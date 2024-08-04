@@ -8,13 +8,6 @@
 
 using namespace Nexus;
 
-namespace Nexus {
-GfxConfiguration config(8, 8, 8, 8, 32, 0, 0, 960, 540,
-                        L"Nexus Engine (Windows)");
-WindowsApplication g_App(config);
-IApplication* g_pApp = &g_App;
-}  // namespace Nexus
-
 int Nexus::WindowsApplication::Initialize() {
     int result;
 
@@ -46,19 +39,18 @@ int Nexus::WindowsApplication::Initialize() {
     RegisterClassEx(&wc);
 
     // Create the window and use the result as the handle
-    hWnd =
-        CreateWindowExW(0,
-                        L"GameEngineFromScratch",  // name of the window class
-                        m_Config.appName,          // title of the window
-                        WS_OVERLAPPEDWINDOW,       // window style
-                        CW_USEDEFAULT,             // x-position of the window
-                        CW_USEDEFAULT,             // y-position of the window
-                        m_Config.screenWidth,      // width of the window
-                        m_Config.screenHeight,     // height of the window
-                        nullptr,    // we have no parent window, NULL
-                        nullptr,    // we aren't using menus, NULL
-                        hInstance,  // application handle
-                        nullptr);   // used with multiple windows, NULL
+    hWnd = CreateWindowEx(0,
+                          _T("NexusEngine"),      // name of the window class
+                          m_Config.appName,       // title of the window
+                          WS_OVERLAPPEDWINDOW,    // window style
+                          CW_USEDEFAULT,          // x-position of the window
+                          CW_USEDEFAULT,          // y-position of the window
+                          m_Config.screenWidth,   // width of the window
+                          m_Config.screenHeight,  // height of the window
+                          nullptr,    // we have no parent window, NULL
+                          nullptr,    // we aren't using menus, NULL
+                          hInstance,  // application handle
+                          nullptr);   // used with multiple windows, NULL
 
     // Show the window on the screen
     ShowWindow(hWnd, SW_SHOW);
@@ -89,7 +81,6 @@ LRESULT CALLBACK Nexus::WindowsApplication::WindowProc(HWND hWnd, UINT message,
     switch (message) {
         case WM_PAINT: {
         } break;
-
         // This message is read when the window is closed
         case WM_DESTROY: {
             // Close the application entirely
