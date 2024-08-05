@@ -8,7 +8,7 @@
 #include "Interface.hpp"
 
 namespace Nexus {
-_Interface_ IRuntimeModule {
+interface IRuntimeModule {
    public:
     virtual ~IRuntimeModule() = default;
 

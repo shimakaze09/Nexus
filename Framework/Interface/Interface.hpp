@@ -5,7 +5,7 @@
 #ifndef FRAMEWORK_INTERFACE_INTERFACE_HPP
 #define FRAMEWORK_INTERFACE_INTERFACE_HPP
 
-#define _Interface_ class
+#define interface class
 
 #define implements public
 

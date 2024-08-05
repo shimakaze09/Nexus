@@ -7,16 +7,16 @@
 
 #include <DXGI1_4.h>
 #include <d3d12.h>
-#include <stdint.h>
+#include <cstdint>
 #include "GraphicsManager.hpp"
 
 namespace Nexus {
 class D3d12GraphicsManager : public GraphicsManager {
    public:
-    virtual int Initialize() override;
-    virtual void Finalize() override;
+    int Initialize() override;
+    void Finalize() override;
 
-    virtual void Tick() override;
+    void Tick() override;
 
    private:
     HRESULT CreateRenderTarget();
@@ -25,8 +25,8 @@ class D3d12GraphicsManager : public GraphicsManager {
    private:
     static const uint32_t kFrameCount = 2;
     ID3D12Device* m_pDev = nullptr;  // The pointer to the Direct3D device
-    D3D12_VIEWPORT m_pViewport;         // Viewport structure
-    D3D12_RECT m_scissorRect;          // Scissor rectangle
+    D3D12_VIEWPORT m_Viewport;       // Viewport structure
+    D3D12_RECT m_ScissorRect;        // Scissor rectangle
     IDXGISwapChain3* m_pSwapChain = nullptr;        // Swap chain
     ID3D12Resource* m_pRenderTargets[kFrameCount];  // Render target buffer
     ID3D12CommandAllocator* m_pCommandAllocator = nullptr;  // Command allocator
@@ -40,14 +40,15 @@ class D3d12GraphicsManager : public GraphicsManager {
 
     uint32_t m_nRtvDescriptorSize;
 
-    ID3D12Resource* m_pVertexBuffer = nullptr;    // Vertex buffer
-    D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;  // Vertex buffer view
+    ID3D12Resource* m_pVertexBuffer =
+        nullptr;  // the pointer to the vertex buffer
+    D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView;  // a view of the vertex buffer
 
     // Synchronization objects
     uint32_t m_nFrameIndex;
-    HANDLE m_fenceEvent;
-    ID3D12Fence* m_pFence;
-    uint64_t m_fenceValue;
+    HANDLE m_hFenceEvent;
+    ID3D12Fence* m_pFence = nullptr;
+    uint32_t m_nFenceValue;
 };
 }  // namespace Nexus
 

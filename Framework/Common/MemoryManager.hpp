@@ -5,8 +5,8 @@
 #ifndef NEXUS_MEMORYMANAGER_HPP
 #define NEXUS_MEMORYMANAGER_HPP
 
-#include "IRuntimeModule.hpp"
 #include "Allocator.hpp"
+#include "IRuntimeModule.hpp"
 
 #include <new>
 
@@ -27,9 +27,9 @@ class MemoryManager : implements IRuntimeModule {
    public:
     virtual ~MemoryManager() = default;
 
-    virtual int Initialize();
-    virtual void Finalize();
-    virtual void Tick();
+    int Initialize() override;
+    void Finalize() override;
+    void Tick() override;
 
     void* Allocate(size_t size);
     void Free(void* p, size_t size);

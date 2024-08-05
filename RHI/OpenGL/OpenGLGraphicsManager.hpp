@@ -10,10 +10,10 @@
 namespace Nexus {
 class OpenGLGraphicsManager : public GraphicsManager {
    public:
-    virtual int Initialize() override;
-    virtual void Finalize() override;
+    int Initialize() override;
+    void Finalize() override;
 
-    virtual void Tick() override;
+    void Tick() override;
 };
 }  // namespace Nexus
 

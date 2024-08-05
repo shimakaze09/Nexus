@@ -36,18 +36,18 @@ Allocator* MemoryManager::m_pAllocators;
 }  // namespace Nexus
 
 int Nexus::MemoryManager::Initialize() {
-    // Only initialize once
+    // One-time initialization
     static bool s_bInitialized = false;
     if (!s_bInitialized) {
-        // Initialize the lookup table
+        // Initialize block size lookup table
         m_pBlockSizeLookup = new size_t[kMaxBlockSize + 1];
         size_t j = 0;
-        for (size_t i = 0; i <= kMaxBlockSize; ++i) {
+        for (size_t i = 0; i <= kMaxBlockSize; i++) {
             if (i > kBlockSizes[j]) ++j;
             m_pBlockSizeLookup[i] = j;
         }
 
-        // Initialize allocators
+        // Initialize the allocators
         m_pAllocators = new Allocator[kNumBlockSizes];
         for (size_t i = 0; i < kNumBlockSizes; i++) {
             m_pAllocators[i].Reset(kBlockSizes[i], kPageSize, kAlignment);
@@ -67,28 +67,25 @@ void Nexus::MemoryManager::Finalize() {
 void Nexus::MemoryManager::Tick() {}
 
 Allocator* Nexus::MemoryManager::LookUpAllocator(size_t size) {
-    // Check the lookup table
-    if (size <= kMaxBlockSize) {
+    // Check eligibility for lookup
+    if (size <= kMaxBlockSize)
         return m_pAllocators + m_pBlockSizeLookup[size];
-    } else {
+    else
         return nullptr;
-    }
 }
 
 void* Nexus::MemoryManager::Allocate(size_t size) {
     Allocator* pAlloc = LookUpAllocator(size);
-    if (pAlloc) {
+    if (pAlloc)
         return pAlloc->Allocate();
-    } else {
+    else
         return malloc(size);
-    }
 }
 
 void Nexus::MemoryManager::Free(void* p, size_t size) {
     Allocator* pAlloc = LookUpAllocator(size);
-    if (pAlloc) {
+    if (pAlloc)
         pAlloc->Free(p);
-    } else {
+    else
         free(p);
-    }
 }

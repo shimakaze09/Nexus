@@ -3,7 +3,6 @@
 //
 
 #include "D3d12GraphicsManager.hpp"
-
 #include <d3dcompiler.h>
 #include <objbase.h>
 #include "WindowsApplication.hpp"
@@ -22,7 +21,7 @@ inline void SafeRelease(T** ppInterfaceToRelease) {
     }
 }
 
-static void GetHardwareAdepter(IDXGIFactory4* pFactory,
+static void GetHardwareAdapter(IDXGIFactory4* pFactory,
                                IDXGIAdapter1** ppAdapter) {
     IDXGIAdapter1* pAdapter = nullptr;
     *ppAdapter = nullptr;
@@ -30,7 +29,7 @@ static void GetHardwareAdepter(IDXGIFactory4* pFactory,
     for (UINT adapterIndex = 0;
          DXGI_ERROR_NOT_FOUND !=
          pFactory->EnumAdapters1(adapterIndex, &pAdapter);
-         ++adapterIndex) {
+         adapterIndex++) {
         DXGI_ADAPTER_DESC1 desc;
         pAdapter->GetDesc1(&desc);
 
@@ -42,7 +41,7 @@ static void GetHardwareAdepter(IDXGIFactory4* pFactory,
         // Check to see if the adapter supports Direct3D 12, but don't create
         // the actual device yet.
         if (SUCCEEDED(D3D12CreateDevice(pAdapter, D3D_FEATURE_LEVEL_11_0,
-                                        _uuidof(ID3D12Device), nullptr))) {
+                                        __uuidof(ID3D12Device), nullptr))) {
             break;
         }
     }
@@ -74,7 +73,6 @@ HRESULT Nexus::D3d12GraphicsManager::CreateRenderTarget() {
     for (uint32_t i = 0; i < kFrameCount; i++) {
         if (FAILED(hr = m_pSwapChain->GetBuffer(
                        i, IID_PPV_ARGS(&m_pRenderTargets[i])))) {
-            std::cout << "Failed to get buffer\n";
             break;
         }
         m_pDev->CreateRenderTargetView(m_pRenderTargets[i], nullptr, rtvHandle);
@@ -101,12 +99,11 @@ HRESULT Nexus::D3d12GraphicsManager::CreateGraphicsResources() {
 
     IDXGIFactory4* pFactory;
     if (FAILED(hr = CreateDXGIFactory1(IID_PPV_ARGS(&pFactory)))) {
-        std::cout << "Failed to create DXGI Factory\n";
         return hr;
     }
 
     IDXGIAdapter1* pHardwareAdapter;
-    GetHardwareAdepter(pFactory, &pHardwareAdapter);
+    GetHardwareAdapter(pFactory, &pHardwareAdapter);
 
     if (FAILED(D3D12CreateDevice(pHardwareAdapter, D3D_FEATURE_LEVEL_11_0,
                                  IID_PPV_ARGS(&m_pDev)))) {
@@ -114,39 +111,36 @@ HRESULT Nexus::D3d12GraphicsManager::CreateGraphicsResources() {
         if (FAILED(
                 hr = pFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)))) {
             SafeRelease(&pFactory);
-            std::cout << "Failed to create warp adapter\n";
             return hr;
         }
 
         if (FAILED(hr = D3D12CreateDevice(pWarpAdapter, D3D_FEATURE_LEVEL_11_0,
                                           IID_PPV_ARGS(&m_pDev)))) {
             SafeRelease(&pFactory);
-            std::cout << "Failed to create device\n";
             return hr;
         }
     }
 
-    HWND hWnd = static_cast<WindowsApplication*>(g_pApp)->GetMainWindow();
+    HWND hWnd = reinterpret_cast<WindowsApplication*>(g_pApp)->GetMainWindow();
 
     // Describe and create the command queue.
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
     if (FAILED(hr = m_pDev->CreateCommandQueue(
                    &queueDesc, IID_PPV_ARGS(&m_pCommandQueue)))) {
         SafeRelease(&pFactory);
-        std::cout << "Failed to create command queue\n";
         return hr;
     }
 
-    // Create a struct to hold information about the swap chain.
+    // Create a struct to hold information about the swap chain
     DXGI_SWAP_CHAIN_DESC1 scd;
 
-    // Clear out the struct for use.
+    // Clear out the struct for use
     ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC1));
 
-    // Fill the swap chain description struct.
+    // Fill the swap chain description struct
     scd.Width = g_pApp->GetConfiguration().screenWidth;
     scd.Height = g_pApp->GetConfiguration().screenHeight;
     scd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  // use 32-bit color
@@ -162,15 +156,9 @@ HRESULT Nexus::D3d12GraphicsManager::CreateGraphicsResources() {
 
     IDXGISwapChain1* pSwapChain;
     if (FAILED(hr = pFactory->CreateSwapChainForHwnd(
-                   m_pCommandQueue, hWnd, &scd, NULL, NULL, &pSwapChain))) {
-        std::cout << "Failed to create swap chain\n";
-        std::cout << "hWnd: " << hWnd << "\n";
-        std::cout << "m_pCommandQueue: " << m_pCommandQueue << "\n";
-        std::cout << "Width: " << scd.Width << ", Height: " << scd.Height
-                  << "\n";
-        std::cout << "Format: " << scd.Format << "\n";
-        std::cout << "BufferCount: " << scd.BufferCount << "\n";
-        std::cout << "SwapEffect: " << scd.SwapEffect << "\n";
+                   m_pCommandQueue,  // Swap chain needs the queue so that it
+                                     // can force a flush on it
+                   hWnd, &scd, NULL, NULL, &pSwapChain))) {
         SafeRelease(&pFactory);
         return hr;
     }
@@ -184,7 +172,7 @@ HRESULT Nexus::D3d12GraphicsManager::CreateGraphicsResources() {
 }
 
 int Nexus::D3d12GraphicsManager::Initialize() {
-    int result;
+    int result = 0;
 
     result = static_cast<int>(CreateGraphicsResources());
 
@@ -202,8 +190,8 @@ void Nexus::D3d12GraphicsManager::Finalize() {
     SafeRelease(&m_pRootSignature);
     SafeRelease(&m_pCommandQueue);
     SafeRelease(&m_pCommandAllocator);
-    for (auto& m_pRenderTarget : m_pRenderTargets) {
-        SafeRelease(&m_pRenderTarget);
+    for (uint32_t i = 0; i < kFrameCount; i++) {
+        SafeRelease(&m_pRenderTargets[i]);
     }
     SafeRelease(&m_pSwapChain);
     SafeRelease(&m_pDev);

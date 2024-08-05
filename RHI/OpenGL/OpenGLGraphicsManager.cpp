@@ -2,9 +2,8 @@
 // Created by John on 3/08/2024.
 //
 
-#include <stdio.h>
-
 #include "OpenGLGraphicsManager.hpp"
+#include <cstdio>
 #include "glad/glad.h"
 
 using namespace Nexus;

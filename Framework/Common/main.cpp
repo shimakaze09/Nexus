@@ -1,7 +1,7 @@
 #include <cstdio>
 
-#include "GraphicsManager.hpp"
 #include "IApplication.hpp"
+#include "GraphicsManager.hpp"
 #include "MemoryManager.hpp"
 
 using namespace Nexus;

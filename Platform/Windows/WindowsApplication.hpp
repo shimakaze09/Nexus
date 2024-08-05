@@ -13,18 +13,18 @@
 namespace Nexus {
 class WindowsApplication : public BaseApplication {
    public:
-    explicit WindowsApplication(GfxConfiguration& config)
-        : BaseApplication(config) {}
+    WindowsApplication(GfxConfiguration& config) : BaseApplication(config) {}
 
     int Initialize() override;
     void Finalize() override;
-
+    // One cycle of the main loop
     void Tick() override;
 
+    // The WindowProc function prototype
     static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam,
                                        LPARAM lParam);
 
-    inline HWND GetMainWindow() const { return m_hWnd; }
+    inline HWND GetMainWindow() { return m_hWnd; };
 
    private:
     HWND m_hWnd;

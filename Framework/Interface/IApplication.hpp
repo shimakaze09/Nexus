@@ -9,7 +9,7 @@
 #include "IRuntimeModule.hpp"
 
 namespace Nexus {
-_Interface_ IApplication : implements IRuntimeModule {
+interface IApplication : implements IRuntimeModule {
    public:
     int Initialize() override = 0;
     void Finalize() override = 0;

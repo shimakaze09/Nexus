@@ -11,6 +11,7 @@ using namespace Nexus;
 int Nexus::WindowsApplication::Initialize() {
     int result;
 
+    // First call base class initialization
     result = BaseApplication::Initialize();
 
     if (result != 0) exit(result);
@@ -52,8 +53,10 @@ int Nexus::WindowsApplication::Initialize() {
                           hInstance,  // application handle
                           nullptr);   // used with multiple windows, NULL
 
-    // Show the window on the screen
+    // Display the window on the screen
     ShowWindow(hWnd, SW_SHOW);
+
+    m_hWnd = hWnd;
 
     return result;
 }
@@ -81,6 +84,7 @@ LRESULT CALLBACK Nexus::WindowsApplication::WindowProc(HWND hWnd, UINT message,
     switch (message) {
         case WM_PAINT: {
         } break;
+
         // This message is read when the window is closed
         case WM_DESTROY: {
             // Close the application entirely

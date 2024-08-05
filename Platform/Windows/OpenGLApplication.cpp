@@ -84,8 +84,7 @@ int Nexus::OpenGLApplication::Initialize() {
             printf("Failed to initialize OpenGL loader!\n");
             return -1;
         } else {
-            printf("OpenGL Version %d.%d loaded\n", GLVersion.major,
-                   GLVersion.minor);
+            printf("WGL initialized\n");
             result = 0;
         }
     }

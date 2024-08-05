@@ -11,7 +11,7 @@
 namespace Nexus {
 class BaseApplication : implements IApplication {
    public:
-    explicit BaseApplication(GfxConfiguration& cfg);
+    BaseApplication(GfxConfiguration& cfg);
     int Initialize() override;
     void Finalize() override;
     // One cycle of the main loop
@@ -19,7 +19,7 @@ class BaseApplication : implements IApplication {
 
     bool IsQuit() override;
 
-    inline GfxConfiguration& GetConfiguration() override { return m_Config; }
+    inline GfxConfiguration& GetConfiguration() override { return m_Config; };
 
    protected:
     // Flag if we need to quit the main loop of the application
@@ -27,6 +27,7 @@ class BaseApplication : implements IApplication {
     GfxConfiguration m_Config;
 
    private:
+    // Hide the default construct to enforce a configuration
     BaseApplication() = default;
 };
 }  // namespace Nexus

@@ -57,8 +57,7 @@ void* Nexus::Allocator::Allocate() {
         // Allocate a new page
         PageHeader* pNewPage =
             reinterpret_cast<PageHeader*>(new uint8_t[m_szPageSize]);
-
-        m_nPages++;
+        ++m_nPages;
         m_nBlocks += m_nBlocksPerPage;
         m_nFreeBlocks += m_nBlocksPerPage;
 
@@ -73,7 +72,6 @@ void* Nexus::Allocator::Allocate() {
         m_pPageList = pNewPage;
 
         BlockHeader* pBlock = pNewPage->Blocks();
-
         // Link each block in the page
         for (uint32_t i = 0; i < m_nBlocksPerPage; i++) {
             pBlock->pNext = NextBlock(pBlock);
@@ -85,36 +83,36 @@ void* Nexus::Allocator::Allocate() {
         m_pFreeList = pNewPage->Blocks();
     }
 
-    BlockHeader* pFreeList = m_pFreeList;
+    BlockHeader* freeBlock = m_pFreeList;
     m_pFreeList = m_pFreeList->pNext;
     --m_nFreeBlocks;
 
 #if defined(_DEBUG)
-    FillAllocatedBlock(pFreeList);
+    FillAllocatedBlock(freeBlock);
 #endif
 
-    return reinterpret_cast<void*>(pFreeList);
+    return reinterpret_cast<void*>(freeBlock);
 }
 
 void Nexus::Allocator::Free(void* p) {
-    BlockHeader* pBlock = reinterpret_cast<BlockHeader*>(p);
+    BlockHeader* block = reinterpret_cast<BlockHeader*>(p);
 
 #if defined(_DEBUG)
-    FillFreeBlock(pBlock);
+    FillFreeBlock(block);
 #endif
 
-    pBlock->pNext = m_pFreeList;
-    m_pFreeList = pBlock;
+    block->pNext = m_pFreeList;
+    m_pFreeList = block;
     ++m_nFreeBlocks;
 }
 
 void Nexus::Allocator::FreeAll() {
     PageHeader* pPage = m_pPageList;
     while (pPage) {
-        PageHeader* p = pPage;
+        PageHeader* _p = pPage;
         pPage = pPage->pNext;
 
-        delete[] reinterpret_cast<uint8_t*>(p);
+        delete[] reinterpret_cast<uint8_t*>(_p);
     }
 
     m_pPageList = nullptr;
